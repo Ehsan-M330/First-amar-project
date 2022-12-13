@@ -80,31 +80,29 @@ class Cal:
     def modeC(continuousData, w):
         maxFi = 0
         i = 0
-        for j in range(continuousData):
+        for j in range(len(continuousData)):
             if maxFi < continuousData[j].fi:
                 i = j
                 maxFi = continuousData[j].fi
 
         lm = continuousData[i].first
-        d1 = continuousData[i].fi - continuousData[i - 1].fi
-        d2 = continuousData[i].fi - continuousData[i + 1].fi
+        d1 = continuousData[i].ri - continuousData[i - 1].ri
+        d2 = continuousData[i].ri - continuousData[i + 1].ri
 
         return lm + (d1 / (d1 + d2)) * w
 
     @staticmethod
     def quantileC(continuousData, w, n, p):
-        i = 0
-        while p > 1:
+        while p >= 1:
             p /= 10
-        for j in range(continuousData):
-            if p >= continuousData[j].si:
-                i = j
-                break
-        lp = continuousData[i].first
-        gp = continuousData[i - 1].gi
-        fp = continuousData[i].fi
-
-        return lp + ((n * p - gp) * w) / fp
+        j = 0
+        for i in continuousData:
+            j += 1
+            if p <= i.si:
+                lp = i.first
+                gp = continuousData[j - 2].gi
+                fp = i.fi
+                return lp + ((n * p - gp) * w) / fp
 
     @staticmethod
     def boxPlotC(continuousData, size, w):
